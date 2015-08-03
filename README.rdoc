@@ -1,0 +1,40 @@
+= Mixpanel integration testing tool
+
+== Description
+
+This tool helps you to test your Mixpanel integration in your website by using
+Selenium Driver. You can connect to your own browser with Selenium, use the 
+Docker Helper to connecto to Firefox and Google Chrome or just use any other
+service that provide the Selenium Driver Interface like Browserstack.
+
+== Instalation
+
+_to completed_
+
+=== Gem Instalation
+
+
+_to completed_
+
+== Usage
+
+=== Local repository with Docker
+
+_to completed_
+
+=== Remote repository with Docker
+
+_to completed_
+
+=== Remote repository with Selenium service
+
+_to completed_
+
+== License
+
+Mixpanel integration testing tool is available under an MIT-style license.
+
+:include: MIT-LICENSE
+
+
+
