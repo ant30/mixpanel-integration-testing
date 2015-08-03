@@ -9,32 +9,31 @@ service that provide the Selenium Driver Interface like Browserstack.
 
 == Instalation
 
-_to completed_
+_to_be_completed_
 
 === Gem Instalation
 
-
-_to completed_
+_to_be_completed_
 
 == Usage
 
 === Local repository with Docker
 
-_to completed_
+_to_be_completed_
 
 === Remote repository with Docker
 
-_to completed_
+_to_be_completed_
 
 === Remote repository with Selenium service
 
-_to completed_
+_to_be_completed_
 
 == License
 
 Mixpanel integration testing tool is available under an MIT-style license.
 
-:include: MIT-LICENSE
+:include: LICENSE
 
 
 
