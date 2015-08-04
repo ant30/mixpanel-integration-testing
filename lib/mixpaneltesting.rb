@@ -1,8 +1,15 @@
-require 'version'
+require 'mixpaneltesting/version'
+require 'mixpaneltesting/selenium'
+require 'mixpaneltesting/mixpanel'
 
-class MixpanelTesting
+module MixpanelTesting
 
-  def self.version
-    puts VERSION
+  class MixpanelTesting
+
+    def self.version
+      puts MixpanelTesting::VERSION
+    end
+
   end
+
 end
