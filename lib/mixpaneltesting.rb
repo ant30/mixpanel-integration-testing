@@ -1,6 +1,7 @@
 require 'mixpaneltesting/version'
 require 'mixpaneltesting/selenium'
 require 'mixpaneltesting/mixpanel'
+require 'mixpaneltesting/docker'
 
 module MixpanelTesting
 
