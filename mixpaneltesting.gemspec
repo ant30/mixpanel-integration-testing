@@ -27,6 +27,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'mixpanel_client'
   
   s.add_development_dependency 'docker-api'
+  s.add_development_dependency 'dotenv'
 
 end
 

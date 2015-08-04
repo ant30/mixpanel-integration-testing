@@ -1,3 +1,6 @@
+require 'logger'
+require 'json'
+
 require 'mixpanel_client'
 
 module MixpanelTesting
@@ -5,6 +8,8 @@ module MixpanelTesting
   class MixpanelProvider
 
     def initialize(session_id)
+      @log = Logger.new(STDOUT)
+      @log.info "Login at Mixpanel: #{ENV['MIXPANEL_API_KEY']}  #{ENV['MIXPANEL_API_SECRET']}"
       @client = Mixpanel::Client.new(
         api_key: ENV['MIXPANEL_API_KEY'],
         api_secret: ENV['MIXPANEL_API_SECRET'],
@@ -12,23 +17,24 @@ module MixpanelTesting
       @today = Date.today.strftime("%Y-%m-%d")
       @yesterday = (Date.today - 1).strftime("%Y-%m-%d")
       @session_id = session_id
-
     end
 
     def segmentation(events)
       # Arguments:
       #   events: is a list of event names.
-      response = @client.request(
-        'segmentation',
-        event: events,
-        type: 'general',
-        unit: 'day',
-        from_date: @yesterday,
-        to_date: @today,
-        where: "properties[\"mp_session_id\"] == \"#{session_id}\""
-      )
+      @log.debug "Request to mixpanel: #{events}"
       Hash[events.map { |event|
-        [event, response['data']['values'][event][today]]
+        response = @client.request(
+          'segmentation',
+          event: event,
+          type: 'general',
+          unit: 'day',
+          from_date: @yesterday,
+          to_date: @today,
+          where: "properties[\"mp_session_id\"] == \"#{@session_id}\""
+        )
+        @log.debug JSON.pretty_generate(response)
+        [event, response['data']['values'][event][@today]]
       }]
     end
 
@@ -44,7 +50,7 @@ module MixpanelTesting
 
       result = expected_results.each { |event, expected_value|
         if expected_value != mixpanel_result[event]
-          puts "\"#{event}\": expected value #{expected_value} received #{response[event]}"
+          @log.info "\"#{event}\": expected value #{expected_value} received #{mixpanel_result[event]}"
           break
         end
       }
