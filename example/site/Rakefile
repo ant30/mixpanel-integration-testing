@@ -1,0 +1,22 @@
+%w{bundler find rake/testtask}.each { |lib| require lib }
+
+
+require 'rake'
+require 'rspec/core/rake_task'
+
+ENV['RACK_ENV'] ||= 'development'
+
+require 'dotenv'
+Dotenv.load
+
+# Rake::TestTask.new(:spec) do |t|
+#  t.test_files = FileList['spec/**/*_spec.rb']
+# end
+
+
+
+RSpec::Core::RakeTask.new(:spec) do |t|
+  t.pattern = Dir.glob('spec/**/*_spec.rb')
+  t.rspec_opts = '--format documentation'
+end
+task :default => :spec

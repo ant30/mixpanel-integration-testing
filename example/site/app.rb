@@ -6,7 +6,6 @@ Dotenv.load
 MIXPANEL_TOKEN=ENV['MIXPANEL_TOKEN']
 
 get '/' do
-
   erb :index
 end
 

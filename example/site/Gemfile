@@ -5,3 +5,9 @@ gem 'sinatra'
 gem 'sinatra-contrib'
 gem 'dotenv'
 
+gem 'mixpaneltesting', path: '../..'
+
+group :development, :test do
+  gem 'rspec'
+  gem 'rack-test'
+end
