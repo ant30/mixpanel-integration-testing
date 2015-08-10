@@ -4,8 +4,6 @@ require "mixpaneltesting"
 describe "Mixpaneltesting environment" do
   include_context "mixpaneltesting"
 
-  @localurl = ENV["LOCAL_URL"]
-
   describe "Simple session with one interation (click)" do
 
     it "Expected 2 page views/1 click" do
