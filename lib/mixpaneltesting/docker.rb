@@ -12,7 +12,7 @@ module MixpanelTesting
 
     def initialize(browser, version=nil, debug=false)
       if !['firefox', 'chrome'].include?(browser)
-        raise  DockerProviderBrowserNotAvailable, "#{browser} not available"
+        raise DockerProviderBrowserNotAvailable, "#{browser} not available"
       end
 
       @log = Logger.new(STDOUT)
@@ -25,7 +25,6 @@ module MixpanelTesting
                       "selenium/standalone-#{@browser}#{@version}")
 
       @threads = []
-
 
       # This settings is fully wired for boot2docker/docker-machines
       # We should change this to make compatible with other
@@ -47,6 +46,7 @@ module MixpanelTesting
     end
 
     def start
+      puts "STARTING DOCKER!!!"
       @container.start
     end
 
@@ -62,9 +62,7 @@ module MixpanelTesting
 
     def ready?
       puts selenium_uri
-      Excon.get(selenium_uri).status == 302
-    rescue
-      false
+      Excon.get(selenium_uri).status == 302 rescue false
     end
 
     def selenium_uri

@@ -17,6 +17,7 @@ module MixpanelTesting
       @today = Date.today.strftime("%Y-%m-%d")
       @yesterday = (Date.today - 1).strftime("%Y-%m-%d")
       @session_id = session_id
+      puts ""
     end
 
     def segmentation(events)
@@ -46,17 +47,28 @@ module MixpanelTesting
       #   true: if succesfull.
       #   false: if doesn't. Some info messages can go to stdout with this state.
 
-      mixpanel_result = segmentation expected_results.keys
 
-      result = expected_results.each { |event, expected_value|
-        if expected_value != mixpanel_result[event]
-          @log.info "\"#{event}\": expected value #{expected_value} received #{mixpanel_result[event]}"
-          break
-        end
+      correct = false
+
+
+      (1..10).each {
+
+        mixpanel_result = segmentation expected_results.keys
+
+        result = expected_results.each { |event, expected_value|
+          if expected_value != mixpanel_result[event]
+            @log.info "\"#{event}\": expected value #{expected_value} received #{mixpanel_result[event]}"
+            break
+          end
+        }
+        correct = !result.nil?
+
+        break if correct
+        puts "Retrying mixpanel queries in two seconds"
+        sleep(2)
       }
 
-      # break in loops make .each to return nil
-      !result.nil?
+      correct
     end
 
   end

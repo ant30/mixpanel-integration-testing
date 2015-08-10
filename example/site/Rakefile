@@ -1,5 +1,7 @@
 %w{bundler find rake/testtask}.each { |lib| require lib }
 
+require 'rubygems'
+
 
 require 'rake'
 require 'rspec/core/rake_task'

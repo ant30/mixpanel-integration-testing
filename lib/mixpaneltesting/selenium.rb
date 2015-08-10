@@ -51,11 +51,16 @@ module MixpanelTesting
     end
 
     def end_session(site_url = nil)
+      puts @site_url
       site_url = site_url.nil? ? @site_url : site_url
       end_url = site_url.include?('?') ? "#{site_url}&" : "#{site_url}?"
       end_url = "#{end_url}mp_session_end=#{@session_id}"
       @driver.get end_url
-      waitfor(2)
+      waitfor()
+    end
+
+    def get_page_source
+      @driver.page_source
     end
 
     def quit

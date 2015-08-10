@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
       "lib/mixpaneltesting/selenium.rb",
       "lib/mixpaneltesting/mixpanel.rb",
       "lib/mixpaneltesting/docker.rb",
+      "lib/mixpaneltesting/localsite.rb",
   ]
   s.homepage    =
     'http://rubygems.org/gems/mixpaneltesting'
