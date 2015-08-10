@@ -3,6 +3,7 @@ require 'mixpaneltesting/selenium'
 require 'mixpaneltesting/mixpanel'
 require 'mixpaneltesting/docker'
 require 'mixpaneltesting/localsite'
+require 'mixpaneltesting/rspec_context'
 
 module MixpanelTesting
 

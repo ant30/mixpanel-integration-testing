@@ -1,5 +1,5 @@
-require_relative "mixpanelconfig_spec"
-require_relative "../app.rb"
+require_relative "spec_helper"
+require "mixpaneltesting"
 
 describe "Mixpaneltesting environment" do
   include_context "mixpaneltesting"

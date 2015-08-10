@@ -1,6 +1,5 @@
-require_relative "spec_helper"
+require 'rspec'
 require 'rspec/expectations'
-require 'mixpaneltesting'
 
 
 RSpec.configure do |config|
