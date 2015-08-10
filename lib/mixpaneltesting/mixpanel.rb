@@ -65,7 +65,7 @@ module MixpanelTesting
 
         break if correct
         puts "Retrying mixpanel queries in two seconds"
-        sleep(2)
+        sleep(3)
       }
 
       correct

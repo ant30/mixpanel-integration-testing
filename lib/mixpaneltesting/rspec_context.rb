@@ -47,7 +47,8 @@ RSpec.configure do |config|
   end
 
   config.after(:example) do
-    RSpec.configuration.selenium.end_session
+    # We don't need this using selenium cache per example
+    # RSpec.configuration.selenium.end_session
     RSpec.configuration.selenium.quit
   end
 
