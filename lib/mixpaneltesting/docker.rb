@@ -26,6 +26,9 @@ module MixpanelTesting
 
       @threads = []
 
+      @log.info ["Creating selenium docker, if you don't see Docker started",
+                 "message, try to remove mixpaneltesting docker with:",
+                 "docker rm -rf mixpaneltesting"].join('/n')
       # This settings is fully wired for boot2docker/docker-machines
       # We should change this to make compatible with other
       @container = Docker::Container.create(
@@ -43,11 +46,20 @@ module MixpanelTesting
         },
         "OomKillDisable": false,
       )
+
     end
 
     def start
-      puts "STARTING DOCKER!!!"
       @container.start
+
+      (1..Settings.timeout).each { |i|
+        sleep 1
+        @log.info "Waiting to docker ready: #{i}"
+        break if ready?
+      }
+      @log.info "Docker started"
+
+      open_vnc if @debug
     end
 
     def kill

@@ -4,42 +4,68 @@ require 'rspec/expectations'
 
 RSpec.configure do |config|
 
-
-  [:docker, :selenium, :mixpanel, :localsite, :localurl].each do |item|
+  [
+    :mixpanelsettings,
+    :mixpanelfilesettings,
+    :docker,
+    :selenium,
+    :mixpanel,
+    :localsite,
+    :appurl
+  ].each do |item|
     config.add_setting item
   end
 
   config.before(:suite) do
-    log = Logger.new(STDOUT)
-    log.info "Starting docker, if you don't see started message, try to remove mixpaneltesting docker with docker rm -rf mixpaneltesting"
+    # Crazy yaml/erb/file reader
+    settings = MixpanelTesting::Settings.load_settings(
+      RSpec.configuration.mixpanelfilesettings
+    )
 
-    docker = MixpanelTesting::DockerProvider.new('firefox', '2.46.0', true)
-    docker.start
-    (1..20).each { |i|
-      sleep 1
-      log.info "Waiting to docker ready: #{i}"
-      break if docker.ready?
-    }
-    log.info "Docker started"
+    if settings['execute_mode'] == 'docker'
+      docker = MixpanelTesting::DockerProvider.new(
+        settings['docker']['browser'],
+        settings['docker']['selenium_version'] || '2.46.0',
+        settings['docker']['debug'] || false
+      )
+      docker.start
+    end
 
-    docker.open_vnc
+    appurl = settings['app']['url']
+    puts "LOCAL URL #{appurl}"
+    if settings['app']['run_local']
+      localsite = MixpanelTesting::LocalSiteProvider.new(
+        settings['app']['run_local'], appurl)
+      localsite.start
+      log.info "site started"
+    end
 
-    localurl = ENV["LOCAL_URL"]
-
-    localsite = MixpanelTesting::LocalSiteProvider.new('PORT=3000 ./start', localurl)
-    localsite.start
-
-    log.info "site started"
+    RSpec.configuration.mixpanelsettings = settings
     RSpec.configuration.docker = docker
     RSpec.configuration.localsite = localsite
-    RSpec.configuration.localurl = localurl
+    RSpec.configuration.appurl = appurl
   end
 
   config.before(:example) do
     puts "selenium connection"
-    selenium = MixpanelTesting::SeleniumProvider.new(RSpec.configuration.docker.selenium_uri, :firefox)
+    if RSpec.configuration.docker
+      selenium_browser = (
+        RSpec.configuration.mixpanelsettings['docker']['browser'] == 'firefox' ?
+        :firefox : :chrome
+      )
+      selenium = MixpanelTesting::SeleniumProvider.new(
+        RSpec.configuration.docker.selenium_uri, selenium_browser
+        )
+    else
+      selenium_settings = RSpec.configuration.mixpanelsettings['selenium']
+
+      selenium = MixpanelTesting::SeleniumProvider.new(
+        selenium_settings['selenium_uri'],
+        selenium_settings['capabilities'])
+    end
+
     selenium.connect!
-    selenium.start_session RSpec.configuration.localurl
+    selenium.start_session RSpec.configuration.appurl
     mixpanel = MixpanelTesting::MixpanelProvider.new selenium.session_id
 
     RSpec.configuration.selenium = selenium
@@ -47,14 +73,14 @@ RSpec.configure do |config|
   end
 
   config.after(:example) do
-    # We don't need this using selenium cache per example
+    # We don't need this using selenium session cache per example
     # RSpec.configuration.selenium.end_session
     RSpec.configuration.selenium.quit
   end
 
   config.after(:suite) do
-    RSpec.configuration.docker.kill
-    RSpec.configuration.localsite.kill
+    RSpec.configuration.docker.kill if !RSpec.configuration.docker.nil?
+    RSpec.configuration.localsite.kill if !RSpec.configuration.localsite.nil?
   end
 
 end
@@ -65,7 +91,8 @@ RSpec.shared_context "mixpaneltesting" do
     @selenium = RSpec.configuration.selenium
     @docker = RSpec.configuration.docker
     @localsite = RSpec.configuration.localsite
-    @localurl = RSpec.configuration.localurl
+    @appurl = RSpec.configuration.appurl
     @mixpanel = RSpec.configuration.mixpanel
+    @mixpanelsettings = RSpec.configuration.mixpanelsettings
   end
 end

@@ -9,10 +9,10 @@ module MixpanelTesting
 
     def initialize(session_id)
       @log = Logger.new(STDOUT)
-      @log.info "Login at Mixpanel: #{ENV['MIXPANEL_API_KEY']}  #{ENV['MIXPANEL_API_SECRET']}"
+      @log.info "Login at Mixpanel: #{Settings.mixpanel_api_key}"
       @client = Mixpanel::Client.new(
-        api_key: ENV['MIXPANEL_API_KEY'],
-        api_secret: ENV['MIXPANEL_API_SECRET'],
+        api_key: Settings.mixpanel_api_key,
+        api_secret: Settings.mixpanel_api_secret
       )
       @today = Date.today.strftime("%Y-%m-%d")
       @yesterday = (Date.today - 1).strftime("%Y-%m-%d")
@@ -20,7 +20,7 @@ module MixpanelTesting
       puts ""
     end
 
-    def segmentation(events)
+    def events_segmentation(events)
       # Arguments:
       #   events: is a list of event names.
       @log.debug "Request to mixpanel: #{events}"
@@ -39,7 +39,7 @@ module MixpanelTesting
       }]
     end
 
-    def validate_results(expected_results)
+    def validate_events(expected_results)
       # Arguments:
       #   expected: is a hash of event names (string) related with expected
       #     result
@@ -47,13 +47,12 @@ module MixpanelTesting
       #   true: if succesfull.
       #   false: if doesn't. Some info messages can go to stdout with this state.
 
-
       correct = false
 
 
       (1..10).each {
 
-        mixpanel_result = segmentation expected_results.keys
+        mixpanel_result = events_segmentation expected_results.keys
 
         result = expected_results.each { |event, expected_value|
           if expected_value != mixpanel_result[event]

@@ -12,7 +12,19 @@ module MixpanelTesting
       @selenium_url = selenium_url
       if ![:chrome, :firefox].include? capabilities
         @caps = Selenium::WebDriver::Remote::Capabilities.new
-        @caps.merge! capabilities
+
+        # REQUIRED capabilities
+        ['os', 'os_version', 'browser',
+         'browser_version', 'resolution'].each { |key|
+          @caps[key] = capabilities[key]
+        }
+
+        # NOT REQUIRED capabilities
+        ['browserstack_local', 'browserstack_localIdentifier',
+         'build', 'project'].each { |key|
+          @caps[key.replace('_','.')] = capabilities[key] if !capabilities[key].nil?
+        }
+
       else
         @caps = capabilities
       end
@@ -22,7 +34,6 @@ module MixpanelTesting
       @driver = nil
       @test_cases = []
       @wait = 2
-      @timeout = 20
     end
 
     def connect!
@@ -32,7 +43,7 @@ module MixpanelTesting
         :url => @selenium_url,
         :desired_capabilities => @caps)
 
-      @driver.manage.timeouts.implicit_wait = @timeout # Seconds
+      @driver.manage.timeouts.implicit_wait = Settings.timeout
     end
 
     def start_session(site_url)
@@ -43,11 +54,15 @@ module MixpanelTesting
 
       @log.info "Start mixpanel session #{@session_id}"
 
-      start_url = @site_url.include?('?') ? "#{site_url}&" : "#{site_url}?"
+      start_url = site_url.include?('?') ? "#{site_url}&" : "#{site_url}?"
       start_url = "#{start_url}mp_session_start=#{@session_id}"
       @driver.get start_url
       waitfor()
+    end
 
+    def navigate(url)
+      @driver.get url.start_with?('http') ? url : "#{@site_url}#{url}"
+      waitfor()
     end
 
     def end_session(site_url = nil)
@@ -93,13 +108,13 @@ module MixpanelTesting
       #            ex: waitfor_object_displayed(:class, 'cookies-eu-ok')
       @log.debug "Waiting for #{selector} to be displayed"
       return if @driver.find_element(*selector).displayed?
-      wait = Selenium::WebDriver::Wait.new(:timeout => @timeout)
+      wait = Selenium::WebDriver::Wait.new(:timeout =>  Settings.timeout)
       wait.until { !@driver.find_element(*selector).displayed? }
     end
 
     def click(selector)
-      # Click in the object given by selector. It should be visible in the browser
-      # area.
+      # Click in the object given by selector. It should be visible in the
+      # browser area.
       @log.debug "Clicking at #{selector}"
       link = @driver.find_element(selector)
       @driver.execute_script("arguments[0].scrollIntoView(true);", link)

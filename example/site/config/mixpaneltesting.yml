@@ -1,0 +1,28 @@
+mixpanel:
+  api_key: <%= ENV['MIXPANEL_API_KEY'] %>
+  api_secret: <%= ENV['MIXPANEL_API_SECRET'] %>
+
+app:
+  # Accesible URL for docker or browserstack, this is used to start session in mixpanel
+  url: <%= ENV['APP_URL'] %>
+  # A command to start the local app
+  run_local: false
+  # run_local: PORT=3000 ./start
+
+execute_mode: docker
+generic_timeout: 20
+
+docker:
+  browser: firefox
+  selenium_version: 2.46.0
+  debug: true
+
+browserstack:
+  selenium_uri: http://user@password@hub.browserstack.com/wd/hub
+  capabilities: 
+    os: Windows
+    os_version: 7
+    browser: Firefox
+    browser_version: 39.0
+    resolution: 1280x800
+    browserstack_local: true

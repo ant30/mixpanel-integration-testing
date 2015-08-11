@@ -2,6 +2,7 @@ require_relative "spec_helper"
 require "mixpaneltesting"
 
 describe "Mixpaneltesting environment" do
+  RSpec.configuration.mixpanelfilesettings = "./config/mixpaneltesting.yml"
   include_context "mixpaneltesting"
 
   describe "Simple session with one interation (click)" do
@@ -12,7 +13,7 @@ describe "Mixpaneltesting environment" do
 
       expect(@selenium.get_page_source).to match(/<title>Page 1<\/title>/)
 
-      expect(@mixpanel.validate_results({
+      expect(@mixpanel.validate_events({
         'PageView' => 2,
         'ClickInteraction' => 1
       })).to be true
@@ -33,11 +34,28 @@ describe "Mixpaneltesting environment" do
       @selenium.click(:link_text => 'Thank you page')
       expect(@selenium.get_page_source).to match(/<title>Thank you page<\/title>/)
 
-      expect(@mixpanel.validate_results({
+      expect(@mixpanel.validate_events({
         'PageView' => 4,
         'ClickInteraction' => 3
       })).to be true
     end
-  end
 
+    it "Session without clicks Exapacted 4 page views/0 clicks" do
+      @selenium.waitfor_object_displayed(:tag_name, 'title')
+
+      @selenium.navigate('/page1')
+      expect(@selenium.get_page_source).to match(/<title>Page 1<\/title>/)
+
+      @selenium.navigate('/page2')
+      expect(@selenium.get_page_source).to match(/<title>Page 2<\/title>/)
+
+      @selenium.navigate('/thankyou')
+      expect(@selenium.get_page_source).to match(/<title>Thank you page<\/title>/)
+
+      expect(@mixpanel.validate_events({
+        'PageView' => 4,
+        'ClickInteraction' => 0
+      })).to be true
+    end
+  end
 end
