@@ -53,21 +53,73 @@ correct section in the yaml settings file. The setup require *selenium_uri* and
 *capabilities* with browser description and identification if you use
 BrowserStackLocal
 
-=== Using the local service
+=== Using the app runner
 
-_to_be_completed_
+If you want to do the tests with the site running in your system, you can
+provide a starter script in the yaml settings. With this, the suite can boot up
+and shutdown the app.
 
-== Usage
 
-=== Using selenium in Docker
+=== Settings file
 
-_to_be_completed_
+The settings file is a yaml file. It is in your RSpec suite if you are using it.
+The yaml is going to be preprocessed by ERB, so you can use variables like ENV
+if you need it
 
-=== Using selenium service
+The config file looks like:
 
-_to_be_completed_
+  mixpanel:
+    api_key: your_project_mixpanel_api_key
+    api_secret: your_project_mixpanel_api_secret
+
+  app:
+    url: the url accesible by selenium
+
+    # If you want to use the app runner use something like this
+    # run_local: PORT=3000 ./start
+    # In other case, run_local default behaviour is to no act (false)
+    run_local: false
+
+  # execute_mode is where selenium lives (docker or browserstack service)
+  execute_mode: docker
+
+  # A generic timeout settings to connect to selenium, docker boot up,
+  # local app boot up
+  generic_timeout: 20
+
+  # This section is required is execute_mode is docker
+  docker:
+    # browser can be firefox and chrome. Firefox is more stable.
+    browser: firefox
+
+    # The selenium version in container. The firefox version can vary, but each
+    # selenium version is recommended to a specific Firefox version.
+    selenium_version: 2.46.0
+
+    # With debug true a open vnc:// is going to be launch, so if your system
+    # can handle it, you will see a VNC window to watch the browser process
+    debug: true
+
+  # This section is required is execute_mode is browserstack
+  browserstack:
+    selenium_uri: http://user@password@hub.browserstack.com/wd/hub
+    # Take capabilities from https://www.browserstack.com/automate/ruby
+    capabilities:
+      os: Windows
+      os_version: 7
+      browser: Firefox
+      browser_version: 39.0
+      resolution: 1280x800
+      # Optional settings:
+      browserstack_local: true
+      browserstack_localIdentifier: asdfasdf
+      build: 0020
+      project: example-project
+
 
 == RSpec integration
+
+_to be completed_
 
 == License
 
