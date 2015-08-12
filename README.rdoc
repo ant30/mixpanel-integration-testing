@@ -119,7 +119,67 @@ The config file looks like:
 
 == RSpec integration
 
-_to be completed_
+=== Enable mixpanel testing session in your mixpanel tracking code
+
+Your mixpanel code should be able to capture the parameter in the url
+*mp_session_start=identifier*. Thanks to this parameter, each test example is
+independent from others navigation examples. There are a mp_session_end too,
+but we don't use that by now. The mp_session_start record Mixpanel
+superproperties called *mp_session_id* and *mp_sesion_timestamp*
+
+There are an code example of this integration in the {example site}[https://github.com/ant30/mixpanel-integration-testing/blob/master/example/site/views/layout.rhtml]:
+
+
+=== Just do the tests
+
+You need to *require* the mixpaneltesting in your rspec file and include the
+mixpaneltesting context in your describe sections, before the *it* part.
+To include the context you need to use *include_context*
+
+You can find an example {here}[https://github.com/ant30/mixpanel-integration-testing/blob/master/example/site/spec/mixpanel_spec.rb]
+
+  require_relative "spec_helper"
+  require "mixpaneltesting"
+
+  describe "Mixpaneltesting environment" do
+    RSpec.configuration.mixpanelfilesettings = "./config/mixpaneltesting.yml"
+    include_context "mixpaneltesting"
+
+    describe "Simple session with one interation (click)" do
+
+      it "Expected 2 page views/1 click" do
+        @selenium.waitfor_object_displayed(:tag_name, 'title')
+        @selenium.click(:link_text => 'Page 1')
+
+        expect(@selenium.get_page_source).to match(/<title>Page 1<\/title>/)
+
+        expect(@mixpanel.validate_events({
+          'PageView' => 2,
+          'ClickInteraction' => 1
+        })).to be true
+
+        expect(@mixpanel.validate_complex_query(
+          'PageView',
+          'string(properties["$os"]) == "Linux"',
+          2)
+        ).to be true
+      end
+    end
+    ...
+  end
+
+
+After include the mixpaneltesting context, you can and want to access to
+@selenium and @mixpanel objects. The @selenium object is a wrapper to do page
+interaction and navigation through selenium. The @mixpanel object allow to do
+queries to mixpanel segmentation api. @mixpanel provides two methods to verify
+tracking by counting events in the mixpanel response.
+
+The data in mixpanel is not stored in real time, but it is close to that by
+some seconds. This can cause problems in *@mixpanel.validate_...* results, so
+we repeat the query some times until we got the correct result from mixpanel.
+The process is repeated 10 times with 2 seconds delay.
+
 
 == License
 
