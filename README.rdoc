@@ -17,6 +17,10 @@ Just add the *mixpaneltesting* gem to your Gemfile or install it.
 
   gem install mixpaneltesting
 
+We do not publish the gem jet, so you need to point to github in your gemfile
+
+  gem 'mixpaneltesting', git: "https://github.com/ant30/mixpaneltesting.git"
+
 == Usage
 
 === Local repository with Docker
