@@ -19,7 +19,7 @@ Just add the *mixpaneltesting* gem to your Gemfile or install it.
 
 We do not publish the gem jet, so you need to point to github in your gemfile
 
-  gem 'mixpaneltesting', git: "https://github.com/ant30/mixpaneltesting.git"
+  gem 'mixpaneltesting', git: "https://github.com/ant30/mixpanel-integration-testing.git"
 
 == Usage
 
