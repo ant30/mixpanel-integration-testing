@@ -3,13 +3,17 @@
 == Description
 
 This tool helps you to test your Mixpanel integration in your website by using
-Selenium Driver. You can connect to your own browser with Selenium, use the 
-Docker Helper to connecto to Firefox and Google Chrome or just use any other
+Selenium Driver. You can connect to your own browser with Selenium, use the
+Docker Helper to connect to to Firefox and Google Chrome or just use any other
 service that provide the Selenium Driver Interface like Browserstack.
 
 The tests done with this tools can be integrated into your rspec tests.
 
-== Instalation
+You can see a integration example with a simple Sinatra app in next url:
+
+https://github.com/ant30/mixpanel-integration-testing/tree/master/example/site
+
+== Setup
 
 === Gem Instalation
 
@@ -17,23 +21,50 @@ Just add the *mixpaneltesting* gem to your Gemfile or install it.
 
   gem install mixpaneltesting
 
-We do not publish the gem jet, so you need to point to github in your gemfile
+We haven't published the gem jet, so you need to point to github in your
+gemfile:
 
   gem 'mixpaneltesting', git: "https://github.com/ant30/mixpanel-integration-testing.git"
 
+=== Preparing Docker integration
+
+The docker integration is based on DOCKER_HOST environment variable. So you
+can use boot2docker, docker-machine or just docker if are using a Linux box.
+
+If your are using boot2docker mixed with docker-machine you could have some
+SSL problems. If you can't fix it, you can ignore the SSL verification. Do
+this only if the docker is in your system. This can be very dangerous!!.
+
+  DOCKER_SSL_VERIFY=false
+
+You should pull with your docker interface the Selenium official docker images:
+
+https://hub.docker.com/u/selenium/
+
+P.E. if you want a Firefox selenium system with debug (vnc enabled) you should
+execute:
+
+  $ docker pull selenium/standalone-firefox-debug:2.46.0
+
+=== Preparing Selenium service integration
+
+_to_be_completed_
+
+=== Using the local service
+
+_to_be_completed_
+
 == Usage
 
-=== Local repository with Docker
+=== Using selenium in Docker
 
 _to_be_completed_
 
-=== Remote repository with Docker
+=== Using selenium service
 
 _to_be_completed_
 
-=== Remote repository with Selenium service
-
-_to_be_completed_
+== RSpec integration
 
 == License
 
