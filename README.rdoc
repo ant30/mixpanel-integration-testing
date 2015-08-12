@@ -7,13 +7,15 @@ Selenium Driver. You can connect to your own browser with Selenium, use the
 Docker Helper to connecto to Firefox and Google Chrome or just use any other
 service that provide the Selenium Driver Interface like Browserstack.
 
-== Instalation
+The tests done with this tools can be integrated into your rspec tests.
 
-_to_be_completed_
+== Instalation
 
 === Gem Instalation
 
-_to_be_completed_
+Just add the *mixpaneltesting* gem to your Gemfile or install it.
+
+  gem install mixpaneltesting
 
 == Usage
 
