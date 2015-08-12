@@ -49,8 +49,9 @@ execute:
 === Preparing Selenium service integration
 
 The selenium connector is prepared to connect to BrowserStack by fill the
-correct section in the yaml settings file. The setup require *selenium_uri*,
-*capabilities* with identification if you use BrowserStackLocal
+correct section in the yaml settings file. The setup require *selenium_uri* and
+*capabilities* with browser description and identification if you use
+BrowserStackLocal
 
 === Using the local service
 
