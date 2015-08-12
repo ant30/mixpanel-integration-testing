@@ -17,6 +17,12 @@ describe "Mixpaneltesting environment" do
         'PageView' => 2,
         'ClickInteraction' => 1
       })).to be true
+
+      expect(@mixpanel.validate_complex_query(
+        'PageView',
+        'string(properties["$os"]) == "Linux"',
+        2)
+      ).to be true
     end
   end
 
