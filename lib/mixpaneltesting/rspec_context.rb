@@ -18,6 +18,7 @@ RSpec.configure do |config|
 
   config.before(:suite) do
     # Crazy yaml/erb/file reader
+    log = Logger.new(STDOUT)
     settings = MixpanelTesting::Settings.load_settings(
       RSpec.configuration.mixpanelfilesettings
     )
@@ -32,7 +33,7 @@ RSpec.configure do |config|
     end
 
     appurl = settings['app']['url']
-    puts "LOCAL URL #{appurl}"
+    log.info "LOCAL URL #{appurl}"
     if settings['app']['run_local']
       localsite = MixpanelTesting::LocalSiteProvider.new(
         settings['app']['run_local'], appurl)

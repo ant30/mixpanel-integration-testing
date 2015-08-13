@@ -8,7 +8,7 @@ module MixpanelTesting
     def initialize(cmd, uri)
       @cmd = cmd
       @uri = uri
-      @timeout = MixpanelTesting::Settings.timeout
+      @timeout = Settings.timeout
       @log = Logger.new(STDOUT)
       @pid = nil
     end

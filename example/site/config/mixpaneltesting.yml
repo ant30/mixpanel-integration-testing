@@ -6,8 +6,8 @@ app:
   # Accesible URL for docker or browserstack, this is used to start session in mixpanel
   url: <%= ENV['APP_URL'] %>
   # A command to start the local app
-  run_local: false
-  # run_local: PORT=3000 ./start
+  #run_local: false
+  run_local: PORT=3000 ./start
 
 execute_mode: docker
 generic_timeout: 20
