@@ -20,13 +20,14 @@ Gem::Specification.new do |s|
       "lib/mixpaneltesting/mixpanel.rb",
       "lib/mixpaneltesting/docker.rb",
       "lib/mixpaneltesting/localsite.rb",
+      "lib/mixpaneltesting/rspec_context.rb",
   ]
   s.homepage    =
     'http://rubygems.org/gems/mixpaneltesting'
   s.require_paths = ["lib"]
 
-  s.add_dependency('selenium-webdriver', ">= 2.39")
-  s.add_dependency('mixpanel_client', ">= 4.1.2")
+  s.add_dependency('selenium-webdriver', ">= 2.39.0")
+  s.add_dependency('mixpanel_client')
   s.add_dependency('docker-api', ">= 1.22.0")
   
   s.add_development_dependency 'dotenv'

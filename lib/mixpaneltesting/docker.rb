@@ -43,8 +43,7 @@ module MixpanelTesting
             '4444/tcp' => [{ 'HostPort' => '4444'}], # Selenium Port
             '5900/tcp' => [{ 'HostPort' => '5900'}], # VNC Port for everyone
           }
-        },
-        "OomKillDisable": false,
+        }
       )
 
     end
