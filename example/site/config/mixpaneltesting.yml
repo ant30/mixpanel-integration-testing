@@ -23,9 +23,12 @@ browserstack:
   capabilities: 
     os: Windows
     os_version: 7
-    browser: Firefox
-    browser_version: 39.0
+    browser: 'Firefox'
+    browser_version: '39.0'
     resolution: 1280x800
+    browserstack_local: true
+    build: '001'
+    project: mixpaneltesting
 
 # Chrome in Galaxy S5 example
 # browserstack:

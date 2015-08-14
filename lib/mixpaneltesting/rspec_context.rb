@@ -83,8 +83,8 @@ RSpec.configure do |config|
   end
 
   config.after(:suite) do
-    RSpec.configuration.docker.kill if !RSpec.configuration.docker.nil?
-    RSpec.configuration.localsite.kill if !RSpec.configuration.localsite.nil?
+    RSpec.configuration.docker.kill unless RSpec.configuration.docker.nil?
+    RSpec.configuration.localsite.kill unless RSpec.configuration.localsite.nil?
   end
 
 end

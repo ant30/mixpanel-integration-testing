@@ -11,30 +11,34 @@ module MixpanelTesting
     def initialize(selenium_url, capabilities = :firefox)
       @selenium_url = selenium_url
       @log = Logger.new(STDOUT)
-      logs.info "Selenium initializer"
+      @log.info "Selenium initializer"
       if ![:chrome, :firefox].include? capabilities
         @caps = Selenium::WebDriver::Remote::Capabilities.new
         if capabilities['device'].nil?
-          logs.info "Creating capabilities, desktop environment"
+          @log.info "Creating capabilities, desktop environment"
           # REQUIRED capabilities
           ['os', 'os_version', 'browser',
            'browser_version', 'resolution'].each { |key|
             @caps[key] = capabilities[key]
-            puts @caps[key]
           }
 
           # NOT REQUIRED capabilities
-          ['browserstack_local', 'browserstack_localIdentifier',
-           'build', 'project', 'device', 'platform', 'browserName'].each { |key|
-            @caps[key.gsub('_','.')] = capabilities[key] if !capabilities[key].nil?
+          [ 'platform', 'browserName'].each { |key|
+            @caps[key.gsub('_','.')] = capabilities[key] unless
+              capabilities[key].nil?
           }
         else
-          logs.info "Creating capabilities, mobile environment"
+          @log.info "Creating capabilities, mobile environment"
           @caps["device"] = capabilities['device']
           @caps[:platform] = capabilities['platform']
           @caps[:browserName] = capabilities['browserName']
-          @caps['browserstack.local'] = capabilities['browserstack_local'] == true
         end
+        ['build', 'project', 'browserstack_local', 'browserstack_debug',
+         'browserstack_localIdentifier' ].each { |key|
+            @caps[key.gsub('_','.')] = capabilities[key] unless
+              capabilities[key].nil?
+        }
+
       else
         @caps = capabilities
       end
@@ -42,16 +46,17 @@ module MixpanelTesting
       @driver = nil
       @test_cases = []
       @wait = 2
-      logs.info "Ready to connect"
+      @log.info "Ready to connect"
     end
 
     def connect!
       @log.info "Connecting to selenium through #{@selenium_url}"
+      @log.debug @caps.inspect
       @driver = Selenium::WebDriver.for(
         :remote,
         :url => @selenium_url,
         :desired_capabilities => @caps)
-
+      @log.info('Connected to selenium')
       @driver.manage.timeouts.implicit_wait = Settings.timeout
     end
 
@@ -67,6 +72,11 @@ module MixpanelTesting
       start_url = "#{start_url}mp_session_start=#{@session_id}"
       @driver.get start_url
       waitfor()
+    end
+
+    def reset_cookies
+      @log.info "Reset cookies!!"
+      @driver.deleteAllCookies
     end
 
     def navigate(url)
