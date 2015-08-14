@@ -9,7 +9,7 @@ app:
   #run_local: false
   run_local: PORT=3000 ./start
 
-execute_mode: docker
+execute_mode: browserstack
 generic_timeout: 20
 
 docker:
@@ -17,12 +17,21 @@ docker:
   selenium_version: 2.46.0
   debug: true
 
+# Firefox in Windows example
 browserstack:
-  selenium_uri: http://user@password@hub.browserstack.com/wd/hub
+  selenium_uri: <%= ENV['BROWSERSTACK_URL'] %>
   capabilities: 
     os: Windows
     os_version: 7
     browser: Firefox
     browser_version: 39.0
     resolution: 1280x800
-    browserstack_local: true
+
+# Chrome in Galaxy S5 example
+# browserstack:
+#   selenium_uri: <%= ENV['BROWSERSTACK_URL'] %>
+#   capabilities: 
+#     browserName: android
+#     platform: ANDROID
+#     device: 'Samsung Galaxy S5'
+#     browserstack_local: true

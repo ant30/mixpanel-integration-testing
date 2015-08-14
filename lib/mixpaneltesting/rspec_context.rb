@@ -58,8 +58,11 @@ RSpec.configure do |config|
         RSpec.configuration.docker.selenium_uri, selenium_browser
         )
     else
-      selenium_settings = RSpec.configuration.mixpanelsettings['selenium']
-
+      selector = (RSpec.configuration.mixpanelsettings['execute_mode'] ==
+                      'browserstack' ?
+                  'browserstack' : 'selenium')
+      selenium_settings = RSpec.configuration.mixpanelsettings[selector]
+      puts selenium_settings
       selenium = MixpanelTesting::SeleniumProvider.new(
         selenium_settings['selenium_uri'],
         selenium_settings['capabilities'])

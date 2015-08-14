@@ -10,30 +10,39 @@ module MixpanelTesting
 
     def initialize(selenium_url, capabilities = :firefox)
       @selenium_url = selenium_url
+      @log = Logger.new(STDOUT)
+      logs.info "Selenium initializer"
       if ![:chrome, :firefox].include? capabilities
         @caps = Selenium::WebDriver::Remote::Capabilities.new
+        if capabilities['device'].nil?
+          logs.info "Creating capabilities, desktop environment"
+          # REQUIRED capabilities
+          ['os', 'os_version', 'browser',
+           'browser_version', 'resolution'].each { |key|
+            @caps[key] = capabilities[key]
+            puts @caps[key]
+          }
 
-        # REQUIRED capabilities
-        ['os', 'os_version', 'browser',
-         'browser_version', 'resolution'].each { |key|
-          @caps[key] = capabilities[key]
-        }
-
-        # NOT REQUIRED capabilities
-        ['browserstack_local', 'browserstack_localIdentifier',
-         'build', 'project'].each { |key|
-          @caps[key.replace('_','.')] = capabilities[key] if !capabilities[key].nil?
-        }
-
+          # NOT REQUIRED capabilities
+          ['browserstack_local', 'browserstack_localIdentifier',
+           'build', 'project', 'device', 'platform', 'browserName'].each { |key|
+            @caps[key.gsub('_','.')] = capabilities[key] if !capabilities[key].nil?
+          }
+        else
+          logs.info "Creating capabilities, mobile environment"
+          @caps["device"] = capabilities['device']
+          @caps[:platform] = capabilities['platform']
+          @caps[:browserName] = capabilities['browserName']
+          @caps['browserstack.local'] = capabilities['browserstack_local'] == true
+        end
       else
         @caps = capabilities
       end
 
-      @log = Logger.new(STDOUT)
-
       @driver = nil
       @test_cases = []
       @wait = 2
+      logs.info "Ready to connect"
     end
 
     def connect!

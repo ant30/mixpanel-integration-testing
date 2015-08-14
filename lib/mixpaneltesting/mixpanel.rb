@@ -57,9 +57,19 @@ module MixpanelTesting
       # Return:
       #   true: if succesfull.
       #   false: if doesn't. Some info messages can go to stdout with this state.
-      received = event_complex_query(event, extra_query)
-      @log.info "\"#{event}\": expected value #{expected} received #{received}" unless received == expected
-      received == expected
+      correct = false
+
+      (1..10).each {
+        received = event_complex_query(event, extra_query)
+        @log.info "\"#{event}\": expected value #{expected} received #{received}" unless received == expected
+        correct = received == expected
+
+        break if correct
+        puts "Retrying mixpanel queries in two seconds"
+        sleep(3)
+      }
+
+      correct
     end
 
     def events_segmentation(events)
