@@ -6,7 +6,7 @@ require 'mixpaneltesting/version'
 Gem::Specification.new do |s|
   s.name        = 'mixpaneltesting'
   s.version     = MixpanelTesting::VERSION
-  s.date        = '2015-08-03'
+  s.date        = '2015-08-14'
   s.summary     = "Mixpanel integration testing with Selenium"
   s.description = "Mixpanel integration testing with Selenium Driver (local, docker, browserstack compatible)"
   s.authors     = ["Antonio Perez-Aranda Alcaide"]
@@ -25,9 +25,9 @@ Gem::Specification.new do |s|
     'http://rubygems.org/gems/mixpaneltesting'
   s.require_paths = ["lib"]
 
-  s.add_dependency('selenium-webdriver', "~> 2.46.2")
-  s.add_dependency 'mixpanel_client'
-  s.add_dependency 'docker-api'
+  s.add_dependency('selenium-webdriver', ">= 2.39")
+  s.add_dependency('mixpanel_client', ">= 4.1.2")
+  s.add_dependency('docker-api', ">= 1.22.0")
   
   s.add_development_dependency 'dotenv'
 
