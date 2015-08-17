@@ -61,8 +61,8 @@ module MixpanelTesting
 
       (1..10).each {
         received = event_complex_query(event, extra_query)
-        @log.info "\"#{event}\": expected value #{expected} received #{received}" unless received == expected
         correct = received == expected
+        @log.info "\"#{event}\": expected value #{expected} received #{received}" unless correct
 
         break if correct
         puts "Retrying mixpanel queries in two seconds"

@@ -20,9 +20,7 @@ module MixpanelTesting
       @browser = browser
       @debug = debug
       @version = version.nil? ? "" : ":#{version}"
-      @image_name = (@debug ?
-                      "selenium/standalone-#{@browser}-debug#{@version}" :
-                      "selenium/standalone-#{@browser}#{@version}")
+      @image_name = "selenium/standalone-#{@browser}#{"-debug" if @debug}#{@version}"
 
       @threads = []
 

@@ -17,7 +17,7 @@ module MixpanelTesting
       @pid = Process.spawn @cmd
       puts "Spawn #{@cmd} with pid #{@pid}"
 
-      (1..@timeout).each { |i|
+      (1..@timeout).each {
         sleep 1
         break if ready?
       }

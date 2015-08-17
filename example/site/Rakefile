@@ -6,7 +6,7 @@ require 'rubygems'
 require 'rake'
 require 'rspec/core/rake_task'
 
-ENV['RACK_ENV'] ||= 'development'
+ENV['RACK_ENV'] = ENV['RACK_ENV'] || 'development'
 
 require 'dotenv'
 Dotenv.load

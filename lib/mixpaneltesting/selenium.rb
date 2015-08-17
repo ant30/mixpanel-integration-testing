@@ -24,7 +24,7 @@ module MixpanelTesting
 
           # NOT REQUIRED capabilities
           [ 'platform', 'browserName'].each { |key|
-            @caps[key.gsub('_','.')] = capabilities[key] unless
+            @caps[key.tr('_','.')] = capabilities[key] unless
               capabilities[key].nil?
           }
         else
@@ -35,7 +35,7 @@ module MixpanelTesting
         end
         ['build', 'project', 'browserstack_local', 'browserstack_debug',
          'browserstack_localIdentifier' ].each { |key|
-            @caps[key.gsub('_','.')] = capabilities[key] unless
+            @caps[key.tr('_','.')] = capabilities[key] unless
               capabilities[key].nil?
         }
 
@@ -69,7 +69,7 @@ module MixpanelTesting
       @log.info "Start mixpanel session #{@session_id}"
 
       start_url = site_url.include?('?') ? "#{site_url}&" : "#{site_url}?"
-      start_url = "#{start_url}mp_session_start=#{@session_id}"
+      start_url += "mp_session_start=#{@session_id}"
       @driver.get start_url
       waitfor()
     end
@@ -86,9 +86,9 @@ module MixpanelTesting
 
     def end_session(site_url = nil)
       puts @site_url
-      site_url = site_url.nil? ? @site_url : site_url
+      site_url = @site_url if site_url.nil?
       end_url = site_url.include?('?') ? "#{site_url}&" : "#{site_url}?"
-      end_url = "#{end_url}mp_session_end=#{@session_id}"
+      end_url += "mp_session_end=#{@session_id}"
       @driver.get end_url
       waitfor()
     end
@@ -112,7 +112,7 @@ module MixpanelTesting
 
     def waitfor(n=false)
       # Use waitfor for correct mixpanel js loading and tracking
-      wait = n ? n : @wait
+      wait = n || @wait
       (1..wait).each {
         print "."
         sleep(1)
